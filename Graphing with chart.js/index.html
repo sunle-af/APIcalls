@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <!--chart.js-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+       
+        <title>Fetch API</title>
+    </head>
+    <body>
+        <canvas id="myChar" width="800" height="400">
+        <script>
+            const ylabels=[];
+            const xlabels=[];
+           
+            
+            chartIt();
+            async function chartIt(){
+                await getData();
+                const ctx = document.getElementById('myChar').getContext('2d');
+                const myChart = new Chart(ctx ,{
+                    type:'line',
+                    data: {
+                        labels:xlabels,
+                        datasets: [
+                            {
+                            
+                            data:ylabels,
+                            backgroundColor: 'rgba(255,99,123,0.2)',
+                            borderColor: 'rgba(255,99,123,0.2)',
+                            borderWidth:1
+                            }
+                        ]
+                    }
+                });
+            }
+            async function getData(){
+            const response =await fetch('DataSet.csv');
+            const dataset = await response.text();
+         //   console.log(dataset);
+            
+            const table = dataset.split('\n').slice(1);//basically not parsing with the header line;
+        //  console.log(table);
+            table.forEach(row => {
+               const columns = row.split(',');
+               const year = columns[0];
+               xlabels.push(year);
+               const temprature = columns[1];
+               ylabels.push(parseFloat(temprature)+14);
+               console.log(year,temprature);
+            });
+        
+            }
+            </script>
+    </body>
+</html>
